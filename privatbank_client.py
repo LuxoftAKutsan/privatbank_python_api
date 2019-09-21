@@ -69,6 +69,8 @@ def get_transactions(client_id, secret, card, from_date, to_date):
     statements = content['response']['data']['info']['statements']
     if 'statement' in statements:
         statements = statements['statement']
+        if(type(statements) != list):
+            statements = [statements]
     else:
         return []
     transactions = []
