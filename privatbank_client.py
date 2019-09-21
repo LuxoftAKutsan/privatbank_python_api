@@ -66,6 +66,7 @@ def get_transactions(client_id, secret, card, from_date, to_date):
     request = request_template.format(merchant=merchant, data= data)
     r = requests.post(transactions_url,  data=request)
     content = xmltodict.parse(r.content)
+    print(r.content)
     statements = content['response']['data']['info']['statements']
     if 'statement' in statements:
         statements = statements['statement']
@@ -79,7 +80,8 @@ def get_transactions(client_id, secret, card, from_date, to_date):
         trantime = statement["@trandate"] +" " + statement["@trantime"]
         trantime = datetime.strptime(trantime, '%Y-%m-%d %H:%M:%S')
         transaction["datetime"] = trantime
-        transaction["amount"] = statement["@amount"].split()[0]
+        print(statement["@cardamount"])
+        transaction["amount"] = -float(statement["@cardamount"].split()[0])
         transaction["rest"] = statement["@rest"].split()[0]
         transaction["terminal"] = statement["@terminal"]
         transaction["description"] = statement["@description"]
